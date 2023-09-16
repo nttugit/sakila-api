@@ -1,7 +1,7 @@
 import db from '../utils/db.js';
 
-const TABLE_NAME = 'category';
-const TABLE_ID = 'category_id';
+const TABLE_NAME = 'film';
+const TABLE_ID = 'film_id';
 
 export function findAll() {
     // Không cần async bởi vì trong đây không cần xử lý gì

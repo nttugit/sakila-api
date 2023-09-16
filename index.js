@@ -2,6 +2,7 @@ import express from 'express'
 import morgan from "morgan"
 // import asyncError from 'express-async-errors'
 import categoryRouter from './routes/category.route.js';
+import filmRouter from './routes/film.route.js';
 
 const app = express();
 app.use(express.json());
@@ -14,12 +15,19 @@ app.get('/', function (req, res) {
 })
 
 app.use('/api/categories', categoryRouter);
+app.use('/api/films', filmRouter);
 
 app.post('/', function (req, res) {
     res.status(201).json({
         msg: 'data created'
     })
 })
+
+app.get('/test', function (req, res) {
+    console.log(req.body);
+    res.json(req.body);
+})
+
 
 app.get('/err', function (req, res) {
     throw new Error('Error!');

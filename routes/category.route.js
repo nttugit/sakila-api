@@ -2,6 +2,8 @@ import express from 'express';
 const router = express.Router();
 import * as categoryModel from '../models/category.model.js';
 
+
+
 router.get('/', async (req, res) => {
     const list = await categoryModel.findAll();
     res.json(list);
