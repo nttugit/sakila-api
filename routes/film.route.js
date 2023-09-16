@@ -1,7 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import * as filmModel from '../models/film.model.js';
-
+import filmModel from '../models/film.model.js';
 
 router.get('/', async (req, res) => {
     const list = await filmModel.findAll();
@@ -23,8 +22,8 @@ router.post('/', async (req, res) => {
     const ret = await filmModel.add(film);
     film = {
         film_id: ret[0],
-        ...film
-    }
+        ...film,
+    };
     res.status(201).json(film);
 });
 
@@ -33,17 +32,16 @@ router.patch('/:id', async (req, res) => {
     const film = req.body;
     const n = await filmModel.patch(id, film);
     res.json({
-        affected: n
-    })
+        affected: n,
+    });
 });
 
 router.delete('/:id', async (req, res) => {
     const id = req.params.id || 0;
     const n = await filmModel.del(id);
     res.json({
-        affected: n
-    })
+        affected: n,
+    });
 });
-
 
 export default router;
