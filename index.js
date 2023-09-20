@@ -25,15 +25,6 @@ app.post('/', function (req, res) {
     });
 });
 
-app.get('/test', function (req, res) {
-    console.log(req.body);
-    res.json(req.body);
-});
-
-app.get('/err', function (req, res) {
-    throw new Error('Error!');
-});
-
 app.use(function (req, res) {
     res.status(404).json({
         error: 'Endpoint not found',

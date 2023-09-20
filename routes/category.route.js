@@ -1,47 +1,15 @@
 import express from 'express';
 const router = express.Router();
-import categoryModel from '../models/category.model.js';
+import categoryHandler from '../handlers/category.handler.js';
 
-router.get('/', async (req, res) => {
-    const list = await categoryModel.findAll();
-    res.json(list);
-});
+router.get('/', categoryHandler.getListCategories);
 
-router.get('/:id', async (req, res) => {
-    const id = req.params.id || 0;
-    const category = await categoryModel.findById(id);
-    if (category === null) {
-        return res.status(204).end();
-    }
-    res.json(category);
-});
+router.get('/:id', categoryHandler.getCategoryById);
 
-router.post('/', async (req, res) => {
-    let category = req.body;
+router.post('/', categoryHandler.postCategory);
 
-    const ret = await categoryModel.add(category);
-    category = {
-        category_id: ret[0],
-        ...category,
-    };
-    res.status(201).json(category);
-});
+router.patch('/:id', categoryHandler.patchCategory);
 
-router.patch('/:id', async (req, res) => {
-    const id = req.params.id || 0;
-    const category = req.body;
-    const n = await categoryModel.patch(id, category);
-    res.json({
-        affected: n,
-    });
-});
-
-router.delete('/:id', async (req, res) => {
-    const id = req.params.id || 0;
-    const n = await categoryModel.del(id);
-    res.json({
-        affected: n,
-    });
-});
+router.delete('/:id', categoryHandler.deleteCategory);
 
 export default router;
