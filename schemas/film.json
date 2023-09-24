@@ -1,0 +1,10 @@
+{
+    "type": "object",
+    "properties": {
+        "title": { "type": "string" },
+        "language_id": { "type": "integer" },
+        "release_year": { "type": "integer" }
+    },
+    "required": ["title", "language_id"],
+    "additionalProperties": true
+}
