@@ -1,9 +1,18 @@
 {
     "type": "object",
     "properties": {
-        "title": { "type": "string" },
-        "language_id": { "type": "integer" },
-        "release_year": { "type": "integer" }
+        "title": {
+            "type": "string",
+            "maxLength": 255
+        },
+        "language_id": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "release_year": {
+            "type": "integer",
+            "minimum": 1
+        }
     },
     "required": ["title", "language_id"],
     "additionalProperties": true

@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 // import asyncError from 'express-async-errors'
 import categoryRouter from './routes/category.route.js';
 import filmRouter from './routes/film.route.js';
@@ -8,6 +9,7 @@ import actorRouter from './routes/actor.route.js';
 const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cors());
 
 app.get('/', function (req, res) {
     res.json({

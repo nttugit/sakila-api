@@ -1,0 +1,17 @@
+{
+    "type": "object",
+    "properties": {
+        "first_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 45
+        },
+        "last_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 45
+        }
+    },
+    "required": ["first_name", "last_name"],
+    "additionalProperties": false
+}
