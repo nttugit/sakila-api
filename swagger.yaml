@@ -1,0 +1,629 @@
+openapi: 3.0.3
+info:
+    title: Sakila API
+    description: |-
+        Sakila API phục vụ môn học Các Công Nghệ Lập Trình Hiện Đại (HCMUS)
+    contact:
+        email: nttukhtn@gmail.com
+    version: 1.0.1
+externalDocs:
+    description: Find out more about Swagger
+    url: http://swagger.io
+servers:
+    - url: http://localhost:3000/api
+    - url: http://localhost:3001/api
+    - url: https://petstore3.swagger.io/api/v3
+tags:
+    - name: category
+      description: CRUD Categories - các thể loại phim
+    - name: film
+      description: CRUD Films - các bộ phim
+    - name: actor
+      description: CRUD Actors - các diễn viên
+paths:
+    /categories:
+        get:
+            tags:
+                - category
+            summary: Lấy tất cả Categories
+            description: Lấy tất cả Categories
+            operationId: findAllCategories
+            parameters:
+                - name: page
+                  in: query
+                  description: Trang hiện tại
+                  required: false
+                  schema:
+                      type: integer
+                - name: size
+                  in: query
+                  description: Số lượng items cần lấy
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Category'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Category'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        post:
+            tags:
+                - category
+            summary: Thêm một category
+            description: Thêm một category
+            operationId: createACategory
+            requestBody:
+                $ref: '#/components/requestBodies/Category'
+                required: true
+            responses:
+                '201':
+                    description: Category created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Category'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Category'
+                        application/x-www-form-urlencoded:
+                            schema:
+                                $ref: '#/components/schemas/Category'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+    /categories/{id}:
+        get:
+            tags:
+                - category
+            summary: Lấy category dựa trên Id
+            description: Lấy category dựa trên Id
+            operationId: findCategoryById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của category cần lấy
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Category'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Category'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        patch:
+            tags:
+                - category
+            summary: Cập nhật một category
+            description: Cập nhật một category dựa trên Id
+            operationId: updateCategoryById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của category cần cập nhật
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            requestBody:
+                $ref: '#/components/requestBodies/Category'
+                required: true
+            responses:
+                '200':
+                    $ref: '#/components/responses/AffectedRowsResponse'
+                '204':
+                    description: There is no category with the id
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        delete:
+            tags:
+                - category
+            summary: Xoá category dựa trên Id
+            description: Xoá category dựa id
+            operationId: deleteCategoryById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của category cần xoá
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    $ref: '#/components/responses/AffectedRowsResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+    /films:
+        get:
+            tags:
+                - film
+            summary: Lấy danh sách các bộ phim
+            description: Lấy danh sách các bộ phim
+            operationId: findFilms
+            parameters:
+                - name: page
+                  in: query
+                  description: Trang hiện tại cần lấy
+                  required: false
+                  schema:
+                      type: integer
+                - name: size
+                  in: query
+                  description: Số lượng items cần lấy
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Film'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Film'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        post:
+            tags:
+                - film
+            summary: Thêm một film
+            description: Thêm một film
+            operationId: createAFilm
+            requestBody:
+                $ref: '#/components/requestBodies/Film'
+                required: true
+            responses:
+                '201':
+                    description: Film created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Film'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Film'
+                        application/x-www-form-urlencoded:
+                            schema:
+                                $ref: '#/components/schemas/Film'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+    /films/{id}:
+        get:
+            tags:
+                - film
+            summary: Lấy film dựa trên Id
+            description: Lấy film dựa trên Id
+            operationId: findFilmById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của film cần lấy
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Film'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Film'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        patch:
+            tags:
+                - film
+            summary: Cập nhật một film
+            description: Cập nhật một film dựa trên Id
+            operationId: updateFilmyById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của film cần cập nhật
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            requestBody:
+                $ref: '#/components/requestBodies/Film'
+                required: true
+            responses:
+                '200':
+                    $ref: '#/components/responses/AffectedRowsResponse'
+                '204':
+                    description: There is no film matched the id
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        delete:
+            tags:
+                - film
+            summary: Xoá film dựa trên Id
+            description: Xoá film dựa id
+            operationId: deleteFilmById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của film cần xoá
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    $ref: '#/components/responses/AffectedRowsResponse'
+                '204':
+                    description: There is no film matched the id
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+    /actors:
+        get:
+            tags:
+                - actor
+            summary: Lấy danh sách các bộ diễn viên
+            description: Lấy danh sách các diễn viên
+            operationId: findActors
+            parameters:
+                - name: page
+                  in: query
+                  description: Trang hiện tại cần lấy
+                  required: false
+                  schema:
+                      type: integer
+                - name: size
+                  in: query
+                  description: Số lượng items cần lấy
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        post:
+            tags:
+                - actor
+            summary: Thêm một actor
+            description: Thêm một actor
+            operationId: createAnActor
+            requestBody:
+                $ref: '#/components/requestBodies/Actor'
+                required: true
+            responses:
+                '201':
+                    description: Actor created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                        application/x-www-form-urlencoded:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+    /actors/{id}:
+        get:
+            tags:
+                - actor
+            summary: Lấy actor actor trên Id
+            description: Lấy film dựa trên Id
+            operationId: findActorById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của actor cần lấy
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/Actor'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        patch:
+            tags:
+                - actor
+            summary: Cập nhật một actor
+            description: Cập nhật một actor dựa trên Id
+            operationId: updateActorById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của actor cần cập nhật
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            requestBody:
+                $ref: '#/components/requestBodies/Actor'
+                required: true
+            responses:
+                '200':
+                    $ref: '#/components/responses/AffectedRowsResponse'
+                '204':
+                    description: There is no actor matched the id
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+        delete:
+            tags:
+                - actor
+            summary: Xoá actor dựa trên Id
+            description: Xoá actor dựa Id
+            operationId: deleteActorById
+            parameters:
+                - name: id
+                  in: path
+                  description: Id của actor cần xoá
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    $ref: '#/components/responses/AffectedRowsResponse'
+                '204':
+                    description: There is no actor matched the id
+                '400':
+                    description: Bad request
+                '500':
+                    description: Something went wrong on server
+
+components:
+    schemas:
+        Category:
+            type: object
+            properties:
+                category_id:
+                    type: integer
+                    format: int64
+                    example: 1
+                name:
+                    type: string
+                    example: Action
+                last_update:
+                    type: string
+                    example: '2006-02-14T21:46:27.000Z'
+            xml:
+                name: category
+        Film:
+            type: object
+            properties:
+                film_id:
+                    type: integer
+                    example: 1
+                title:
+                    type: string
+                    example: ACADEMY DINOSAUR
+                description:
+                    type: string
+                    example: A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies
+                release_year:
+                    type: integer
+                    example: 1
+                language_id:
+                    type: integer
+                    example: 1
+                original_language_id:
+                    type: integer
+                    example: null
+                rental_duration:
+                    type: integer
+                    example: 1
+                rental_rate:
+                    type: number
+                    example: 0.99
+                length:
+                    type: integer
+                    example: 1
+                replacement_cost:
+                    type: number
+                    example: 20.99
+                rating:
+                    type: string
+                    example: PG
+                special_features:
+                    type: string
+                    example: Deleted Scenes,Behind the Scenes
+                last_update:
+                    type: string
+                    example: '2006-02-14T22:03:42.000Z'
+            xml:
+                name: film
+        Actor:
+            type: object
+            properties:
+                actor_id:
+                    type: integer
+                    example: 1
+                first_name:
+                    type: string
+                    example: PENELOPE
+                last_name:
+                    type: string
+                    example: GUINESS
+                last_update:
+                    type: string
+                    example: '2006-02-14T21:34:33.000Z'
+            xml:
+                name: actor
+    requestBodies:
+        Category:
+            description: Dữ liệu đối tượng Category để gửi lên tạo mới hoặc cập nhật
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            name:
+                                type: string
+                                example: Action
+                application/xml:
+                    schema:
+                        type: object
+                        properties:
+                            name:
+                                type: string
+                                example: Action
+                        xml:
+                            name: category
+                application/x-www-form-urlencoded:
+                    schema:
+                        type: object
+                        properties:
+                            name:
+                                type: string
+                                example: Action
+        Film:
+            description: Dữ liệu đối tượng Film để gửi lên tạo mới hoặc cập nhật
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            title:
+                                type: string
+                                example: ACADEMY DINOSAUR
+                            description:
+                                type: string
+                                example: A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies
+                            release_year:
+                                type: integer
+                                example: 2023
+                            language_id:
+                                type: integer
+                                example: 1
+                            length:
+                                type: integer
+                                example: 120
+                        required:
+                            - title, language_id
+        Actor:
+            description: Dữ liệu đối tượng Actor để gửi lên tạo mới hoặc cập nhật
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            first_name:
+                                type: string
+                                example: Angelina
+                            last_name:
+                                type: string
+                                example: Jolie
+                application/xml:
+                    schema:
+                        type: object
+                        properties:
+                            first_name:
+                                type: string
+                                example: Angelina
+                            last_name:
+                                type: string
+                                example: Jolie
+                application/x-www-form-urlencoded:
+                    schema:
+                        type: object
+                        properties:
+                            first_name:
+                                type: string
+                                example: Angelina
+                            last_name:
+                                type: string
+                                example: Jolie
+    responses:
+        AffectedRowsResponse:
+            description: Successful operation
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            affected:
+                                type: integer
+                                example: 1

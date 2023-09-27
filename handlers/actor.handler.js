@@ -7,6 +7,13 @@ handler.getListActors = async (req, res) => {
     res.json(list);
 };
 
+handler.getActors = async (req, res) => {
+    const conditions = {};
+    const { page = 1, size = 10 } = req.query;
+    const list = await actorModel.find({ page, size }, conditions);
+    res.json(list);
+};
+
 handler.getActorById = async (req, res) => {
     const id = req.params.id || 0;
     const actor = await actorModel.findById(id);
@@ -29,6 +36,10 @@ handler.postActor = async (req, res) => {
 
 handler.patchActor = async (req, res) => {
     const id = req.params.id || 0;
+    const found = await actorModel.findById(id);
+    if (found === null) {
+        return res.status(204).end();
+    }
     const actor = req.body;
     const n = await actorModel.patch(id, actor);
     res.json({
@@ -38,6 +49,10 @@ handler.patchActor = async (req, res) => {
 
 handler.deleteActor = async (req, res) => {
     const id = req.params.id || 0;
+    const found = await actorModel.findById(id);
+    if (found === null) {
+        return res.status(204).end();
+    }
     const n = await actorModel.del(id);
     res.json({
         affected: n,

@@ -2,10 +2,18 @@ import filmModel from '../models/film.model.js';
 
 const handler = {};
 
-handler.getFilms = async (req, res) => {
+handler.getAllFilms = async (req, res) => {
     const list = await filmModel.findAll();
     res.json(list);
 };
+
+handler.getFilms = async (req, res) => {
+    const conditions = {};
+    const { page = 1, size = 10 } = req.query;
+    const list = await filmModel.find({ page, size }, conditions);
+    res.json(list);
+};
+
 handler.getFilmById = async (req, res) => {
     const id = req.params.id || 0;
     const film = await filmModel.findById(id);
@@ -14,6 +22,7 @@ handler.getFilmById = async (req, res) => {
     }
     res.json(film);
 };
+
 handler.postFilm = async (req, res) => {
     let film = req.body;
 
@@ -24,16 +33,26 @@ handler.postFilm = async (req, res) => {
     };
     res.status(201).json(film);
 };
+
 handler.patchFilm = async (req, res) => {
     const id = req.params.id || 0;
+    const found = await filmModel.findById(id);
+    if (found === null) {
+        return res.status(204).end();
+    }
     const film = req.body;
     const n = await filmModel.patch(id, film);
     res.json({
         affected: n,
     });
 };
+
 handler.deleteFilm = async (req, res) => {
     const id = req.params.id || 0;
+    const found = await filmModel.findById(id);
+    if (found === null) {
+        return res.status(204).end();
+    }
     const n = await filmModel.del(id);
     res.json({
         affected: n,

@@ -9,13 +9,9 @@ const schema = JSON.parse(
 );
 
 router.get('/', filmHandler.getFilms);
-
 router.get('/:id', filmHandler.getFilmById);
-
 router.post('/', validate(schema), filmHandler.postFilm);
-
 router.patch('/:id', validate(schema), filmHandler.patchFilm);
-
 router.delete('/:id', filmHandler.deleteFilm);
 
 export default router;

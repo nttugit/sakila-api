@@ -7,7 +7,8 @@ const schema = JSON.parse(
     await readFile(new URL('../schemas/category.json', import.meta.url)),
 );
 
-router.get('/', categoryHandler.getListCategories);
+// router.get('/', categoryHandler.getAllCategories);
+router.get('/', categoryHandler.getCategories);
 router.get('/:id', categoryHandler.getCategoryById);
 router.post('/', validate(schema), categoryHandler.postCategory);
 router.patch('/:id', validate(schema), categoryHandler.patchCategory);

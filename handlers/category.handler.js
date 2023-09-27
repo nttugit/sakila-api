@@ -2,8 +2,15 @@ import categoryModel from '../models/category.model.js';
 
 const handler = {};
 
-handler.getListCategories = async (req, res) => {
+handler.getAllCategories = async (req, res) => {
     const list = await categoryModel.findAll();
+    res.json(list);
+};
+
+handler.getCategories = async (req, res) => {
+    const conditions = {};
+    const { page = 1, size = 10 } = req.query;
+    const list = await categoryModel.find({ page, size }, conditions);
     res.json(list);
 };
 
@@ -29,6 +36,10 @@ handler.postCategory = async (req, res) => {
 
 handler.patchCategory = async (req, res) => {
     const id = req.params.id || 0;
+    const found = await categoryModel.findById(id);
+    if (found === null) {
+        return res.status(204).end();
+    }
     const category = req.body;
     const n = await categoryModel.patch(id, category);
     res.json({
@@ -38,6 +49,10 @@ handler.patchCategory = async (req, res) => {
 
 handler.deleteCategory = async (req, res) => {
     const id = req.params.id || 0;
+    const found = await categoryModel.findById(id);
+    if (found === null) {
+        return res.status(204).end();
+    }
     const n = await categoryModel.del(id);
     res.json({
         affected: n,
