@@ -5,15 +5,41 @@
             "type": "string",
             "maxLength": 255
         },
-        "language_id": {
-            "type": "integer",
-            "minimum": 1
+        "description": {
+            "type": "string"
         },
         "release_year": {
             "type": "integer",
             "minimum": 1
+        },
+        "language_id": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "original_language_id": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "rental_duration": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "rental_rate": {
+            "type": "number"
+        },
+        "length": {
+            "type": "integer"
+        },
+        "replacement_cost": {
+            "type": "number"
+        },
+        "rating": {
+            "enum": ["G", "PG", "PG-13", "R", "NC-17"]
+        },
+        "special_features": {
+            "type": "string"
         }
     },
     "required": ["title", "language_id"],
-    "additionalProperties": true
+    "additionalProperties": false
 }
