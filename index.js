@@ -1,9 +1,12 @@
+import 'dotenv/config';
 import express from 'express';
 import fs from 'fs';
 import morgan from 'morgan';
 import cors from 'cors';
 import YAML from 'yaml';
 import swaggerUi from 'swagger-ui-express';
+import logging from './middlewares/log.mdw.js';
+import { runLogRotation } from './utils/logRotation.js';
 
 // routes
 import categoryRouter from './routes/category.route.js';
@@ -15,10 +18,13 @@ const yamlDocFile = fs.readFileSync('./swagger.yaml', 'utf-8');
 const swaggerDocument = YAML.parse(yamlDocFile);
 
 const app = express();
+
+// middlewares
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(logging);
 
 app.get('/', function (req, res) {
     res.json({
@@ -48,6 +54,8 @@ app.use(function (err, req, res, next) {
         error: 'Something wrong',
     });
 });
+
+setInterval(runLogRotation, process.env.LOG_ROTATION_PERIOD || 6000); // Kiểm tra mỗi phút (60000 milliseconds)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
