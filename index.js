@@ -1,4 +1,6 @@
 import express from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
 import fs from 'fs';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -9,6 +11,7 @@ import swaggerUi from 'swagger-ui-express';
 import categoryRouter from './routes/category.route.js';
 import filmRouter from './routes/film.route.js';
 import actorRouter from './routes/actor.route.js';
+import userRouter from './routes/userAuth.route.js';
 
 // swagger configuration
 const yamlDocFile = fs.readFileSync('./swagger.yaml', 'utf-8');
@@ -29,6 +32,7 @@ app.get('/', function (req, res) {
 app.use('/api/categories', categoryRouter);
 app.use('/api/films', filmRouter);
 app.use('/api/actors', actorRouter);
+app.use('/api/auth', userRouter);
 
 app.post('/', function (req, res) {
     res.status(201).json({

@@ -1,5 +1,6 @@
+import axios from 'axios';
+import crypto from 'crypto';
 import filmModel from '../models/film.model.js';
-
 const handler = {};
 
 handler.getAllFilms = async (req, res) => {
@@ -7,11 +8,42 @@ handler.getAllFilms = async (req, res) => {
     res.json(list);
 };
 
+function generateToken(url, timestamp) {
+    console.log({
+        url,
+        timestamp,
+        SECRET_KEY: process.env.SECRET_KEY,
+    });
+    return crypto
+        .createHash('sha256')
+        .update(url + timestamp + process.env.SECRET_KEY)
+        .digest('hex');
+}
+
 handler.getFilms = async (req, res) => {
-    const conditions = {};
-    const { page = 1, size = 10 } = req.query;
-    const list = await filmModel.find({ page, size }, conditions);
-    res.json(list);
+    // Không có data, phải call qua server b
+    // const conditions = {};
+    // const { page = 1, size = 10 } = req.query;
+    // const list = await filmModel.find({ page, size }, conditions);
+
+    const apiUrl = 'http://localhost:3001/api/films';
+    const timestamp = new Date().getTime();
+    const token = generateToken(apiUrl, timestamp);
+
+    // time tạo token và time gọi API khác nhau
+
+    const queryParameters = `?token=${token}&timestamp=${timestamp}`;
+    const fullApiUrl = apiUrl + queryParameters;
+    console.log(fullApiUrl);
+
+    try {
+        const response = await axios.get(fullApiUrl);
+        return res.status(200).json(response.data);
+    } catch (err) {
+        // console.log(err);
+        return res.status(400).json({ err: 'you dont know anything' });
+    }
+    // res.json(data);
 };
 
 handler.getFilmById = async (req, res) => {

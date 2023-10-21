@@ -6,6 +6,7 @@ export default function (tableName, tableId) {
             // Không cần async bởi vì trong đây không cần xử lý gì
             return db(tableName);
         },
+
         find(pagination = {}, conditions = {}) {
             const offset = pagination.page * pagination.size - pagination.size;
             return db
@@ -14,12 +15,16 @@ export default function (tableName, tableId) {
                 .offset(offset)
                 .limit(pagination.size);
         },
+        async findOne(conditions = {}) {
+            // console.log('conditions', conditions);
+            return db.from(tableName).where(conditions).first();
+        },
         async findById(id) {
             const list = await db(tableName).where(tableId, id);
             return list.length === 0 ? null : list[0];
         },
 
-        add(entity) {
+        async add(entity) {
             return db(tableName).insert(entity);
         },
 
