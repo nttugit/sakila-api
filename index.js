@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import YAML from 'yaml';
 import swaggerUi from 'swagger-ui-express';
+import RESPONSE from './constants/response.js';
 
 // routes
 import categoryRouter from './routes/category.route.js';
@@ -24,9 +25,7 @@ app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', function (req, res) {
-    res.json({
-        msg: 'hello from expressjs',
-    });
+    res.status(200).json(RESPONSE.SUCCESS(null, 'Hello World!', null));
 });
 
 app.use('/api/categories', categoryRouter);
@@ -41,16 +40,12 @@ app.post('/', function (req, res) {
 });
 
 app.use(function (req, res) {
-    res.status(404).json({
-        error: 'Endpoint not found',
-    });
+    res.status(404).json(RESPONSE.FAILURE(404, 'Endpoint not found'));
 });
 
 app.use(function (err, req, res, next) {
     console.log(err.stack);
-    res.status(500).json({
-        error: 'Something wrong',
-    });
+    res.status(500).json(RESPONSE.FAILURE(500, 'Something went wrong'));
 });
 
 const PORT = process.env.PORT || 3000;

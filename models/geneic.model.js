@@ -35,5 +35,8 @@ export default function (tableName, tableId) {
         patch(id, entity) {
             return db(tableName).where(tableId, id).update(entity);
         },
+        count(conditions) {
+            return db(tableName).where(conditions).count().first();
+        },
     };
 }

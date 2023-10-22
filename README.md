@@ -3,5 +3,6 @@
 ## How to use
 
 -   Clone the repository
--   Run "npm install" or "yarn"
+-   Run "npm install" or "yarn" to install
+-   Run "npm start" or "yarn start" to start
 -   Open endpoint "/api-docs" for more
