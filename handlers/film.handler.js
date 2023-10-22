@@ -1,6 +1,8 @@
 import axios from 'axios';
 import crypto from 'crypto';
 import filmModel from '../models/film.model.js';
+import RESPONSE from '../constants/response.js';
+
 const handler = {};
 
 handler.getAllFilms = async (req, res) => {
@@ -20,11 +22,8 @@ function generateToken(url, timestamp) {
         .digest('hex');
 }
 
-handler.getFilms = async (req, res) => {
+handler.getFilmsFromServerB = async (req, res) => {
     // Không có data, phải call qua server b
-    // const conditions = {};
-    // const { page = 1, size = 10 } = req.query;
-    // const list = await filmModel.find({ page, size }, conditions);
 
     const apiUrl = 'http://localhost:3001/api/films';
     const timestamp = new Date().getTime();
@@ -46,13 +45,30 @@ handler.getFilms = async (req, res) => {
     // res.json(data);
 };
 
+handler.getFilms = async (req, res) => {
+    const conditions = {};
+    const { page = 1, size = 10 } = req.query;
+    const list = await filmModel.find({ page, size }, conditions);
+    const totalItems = await filmModel.count(conditions);
+    res.status(200).json(
+        RESPONSE.SUCCESS(list, 'get successfully', {
+            pagination: {
+                totalItems: totalItems['count(*)'], // Total number of items available
+                itemsPerPage: size, // Number of items per page
+                currentPage: page, // The current page being returned
+                totalPages: Math.ceil(totalItems['count(*)'] / size),
+            },
+        }),
+    );
+};
+
 handler.getFilmById = async (req, res) => {
     const id = req.params.id || 0;
     const film = await filmModel.findById(id);
     if (film === null) {
         return res.status(204).end();
     }
-    res.json(film);
+    res.status(200).json(RESPONSE.SUCCESS(film, 'get successfully', null));
 };
 
 handler.postFilm = async (req, res) => {
@@ -63,32 +79,44 @@ handler.postFilm = async (req, res) => {
         film_id: ret[0],
         ...film,
     };
-    res.status(201).json(film);
+    res.status(201).json(RESPONSE.SUCCESS(film, 'created', null));
 };
 
 handler.patchFilm = async (req, res) => {
     const id = req.params.id || 0;
     const found = await filmModel.findById(id);
     if (found === null) {
-        return res.status(204).end();
+        return res.status(400).json(RESPONSE.FAILURE(400, 'film not found'));
     }
     const film = req.body;
-    const n = await filmModel.patch(id, film);
-    res.json({
-        affected: n,
-    });
+    const affectedRecords = await filmModel.patch(id, film);
+    res.status(200).json(
+        RESPONSE.SUCCESS(
+            {
+                affected: affectedRecords,
+            },
+            'updated',
+            null,
+        ),
+    );
 };
 
 handler.deleteFilm = async (req, res) => {
     const id = req.params.id || 0;
     const found = await filmModel.findById(id);
     if (found === null) {
-        return res.status(204).end();
+        return res.status(400).json(RESPONSE.FAILURE(400, 'film not found'));
     }
-    const n = await filmModel.del(id);
-    res.json({
-        affected: n,
-    });
+    const affectedRecords = await filmModel.del(id);
+    res.status(200).json(
+        RESPONSE.SUCCESS(
+            {
+                affected: affectedRecords,
+            },
+            'updated',
+            null,
+        ),
+    );
 };
 
 export default handler;

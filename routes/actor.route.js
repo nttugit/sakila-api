@@ -11,7 +11,8 @@ const schema = JSON.parse(
 );
 
 // router.get('/', actorHandler.getListActors);
-router.get('/', userAuth, actorHandler.getActors);
+// router.get('/', userAuth, actorHandler.getActors);
+router.get('/', actorHandler.getActors);
 router.get('/:id', actorHandler.getActorById);
 router.post('/', validate(schema), actorHandler.postActor);
 router.patch('/:id', validate(schema), actorHandler.patchActor);

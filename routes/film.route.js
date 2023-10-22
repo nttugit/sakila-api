@@ -8,7 +8,7 @@ const schema = JSON.parse(
     await readFile(new URL('../schemas/film.json', import.meta.url)),
 );
 
-router.get('/from-b', filmHandler.getFilms);
+router.get('/from-b', filmHandler.getFilmsFromServerB);
 
 router.get('/', filmHandler.getFilms);
 router.get('/:id', filmHandler.getFilmById);
