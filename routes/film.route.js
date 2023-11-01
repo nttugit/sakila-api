@@ -3,12 +3,14 @@ import { readFile } from 'fs/promises';
 const router = express.Router();
 import filmHandler from '../handlers/film.handler.js';
 import validate from '../middlewares/validate.mdw.js';
+import userAuth from '../middlewares/userAuth.mdw.js';
 
 const schema = JSON.parse(
     await readFile(new URL('../schemas/film.json', import.meta.url)),
 );
 
-router.get('/from-b', filmHandler.getFilmsFromServerB);
+router.get('/from-b', userAuth, filmHandler.getFilmsFromServerB);
+// router.get('/from-b', userAuth, filmHandler.getFilmsFromServerB);
 
 router.get('/', filmHandler.getFilms);
 router.get('/:id', filmHandler.getFilmById);

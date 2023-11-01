@@ -30,10 +30,8 @@ handler.getFilmsFromServerB = async (req, res) => {
     const token = generateToken(apiUrl, timestamp);
 
     // time tạo token và time gọi API khác nhau
-
     const queryParameters = `?token=${token}&timestamp=${timestamp}`;
     const fullApiUrl = apiUrl + queryParameters;
-    console.log(fullApiUrl);
 
     try {
         const response = await axios.get(fullApiUrl);

@@ -143,7 +143,7 @@ handler.refreshToken = async (req, res) => {
     if (!decoded)
         return res.status(401).json(RESPONSE.FAILURE(401, 'Access denied'));
 
-    console.log('decoded', decoded);
+    console.log('Người nào đó refresh token: ', decoded);
     const username = decoded.payload.username; // Lấy username từ payload
 
     const user = await userModel.findOne({ username });

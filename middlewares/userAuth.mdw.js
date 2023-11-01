@@ -15,7 +15,7 @@ export default async (req, res, next) => {
         accessToken,
         process.env.ACCESS_TOKEN_SECRET,
     );
-    console.log('verified', verified);
+
     if (!verified)
         return res.status(401).json(RESPONSE.FAILURE(401, 'Access denied'));
 
