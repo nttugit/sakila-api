@@ -6,6 +6,11 @@ import morgan from 'morgan';
 import cors from 'cors';
 import YAML from 'yaml';
 import swaggerUi from 'swagger-ui-express';
+
+// WEBSOCKET
+// import socketServer from './ws.js';
+import sseEmitter from './sse.js';
+
 import RESPONSE from './constants/response.js';
 
 // routes
@@ -19,6 +24,7 @@ const yamlDocFile = fs.readFileSync('./swagger.yaml', 'utf-8');
 const swaggerDocument = YAML.parse(yamlDocFile);
 
 const app = express();
+
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
@@ -39,6 +45,22 @@ app.post('/', function (req, res) {
     });
 });
 
+// SSE
+app.get('/subscribeCategoryAdded', function (req, res) {
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+    });
+
+    sseEmitter.on('category_added', function (data) {
+        res.write(`retry: 500\n`);
+        res.write(`event: category_added\n`);
+        res.write(`data: ${JSON.stringify(data)}\n`);
+        res.write(`\n`);
+    });
+});
+
 app.use(function (req, res) {
     res.status(404).json(RESPONSE.FAILURE(404, 'Endpoint not found'));
 });
@@ -47,8 +69,8 @@ app.use(function (err, req, res, next) {
     console.log(err.stack);
     res.status(500).json(RESPONSE.FAILURE(500, 'Something went wrong'));
 });
-
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
     console.log(`Sakila API is listening at http://localhost:${PORT}`);
 });

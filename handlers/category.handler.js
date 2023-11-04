@@ -1,11 +1,59 @@
+import moment from 'moment';
 import categoryModel from '../models/category.model.js';
 import RESPONSE from '../constants/response.js';
+import { broadcastAll } from '../ws.js';
+import sseEmitter from '../sse.js';
 
 const handler = {};
 
 handler.getAllCategories = async (req, res) => {
     const list = await categoryModel.findAll();
     res.status(200).json(RESPONSE.SUCCESS(list, 'get successfully', null));
+};
+
+handler.getAllCategoriesShortPolling = async (req, res) => {
+    const ts = req.query.ts || 0;
+    const list = await categoryModel.findWithPolling(ts);
+
+    res.status(200).json(
+        RESPONSE.SUCCESS(list, 'get successfully', {
+            polling: {
+                return_ts: moment().unix(), // thời điểm trả data về cho client
+            },
+        }),
+    );
+};
+
+handler.getAllCategoriesLongPolling = async (req, res) => {
+    const ts = req.query.ts || 0;
+    // Cơ chế tự ngắt, cho loop một số lần nhất định
+    let loop = 0;
+    const longPollingFn = async function () {
+        console.log('loop: ' + loop);
+        const list = await categoryModel.findWithPolling(ts);
+        if (list.length > 0) {
+            res.status(200).json(
+                RESPONSE.SUCCESS(list, 'get successfully', {
+                    polling: {
+                        return_ts: moment().unix(), // thời điểm trả data về cho client
+                    },
+                }),
+            );
+        } else {
+            loop++;
+            if (loop < 4) setTimeout(longPollingFn, 3000);
+            else
+                res.status(200).json(
+                    RESPONSE.SUCCESS([], 'get successfully', {
+                        polling: {
+                            return_ts: moment().unix(), // thời điểm trả data về cho client
+                        },
+                    }),
+                );
+        }
+    };
+
+    await longPollingFn();
 };
 
 handler.getCategories = async (req, res) => {
@@ -42,6 +90,24 @@ handler.postCategory = async (req, res) => {
         category_id: ret[0],
         ...category,
     };
+
+    // Broadcast through websocket
+    broadcastAll(JSON.stringify(category));
+
+    res.status(200).json(RESPONSE.SUCCESS(category, 'created', null));
+};
+
+handler.postCategorySSE = async (req, res) => {
+    let category = req.body;
+
+    const ret = await categoryModel.add(category);
+    category = {
+        category_id: ret[0],
+        ...category,
+    };
+
+    // Broadcast through websocket
+    sseEmitter.emit('category_added', category);
     res.status(200).json(RESPONSE.SUCCESS(category, 'created', null));
 };
 

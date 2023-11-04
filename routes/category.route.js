@@ -7,10 +7,22 @@ const schema = JSON.parse(
     await readFile(new URL('../schemas/category.json', import.meta.url)),
 );
 
-// router.get('/', categoryHandler.getAllCategories);
-router.get('/', categoryHandler.getCategories);
+// router.get('/', categoryHandler.getCategories);
+router.get('/', categoryHandler.getAllCategories);
+
+// SHORT POLLING
+router.get('/sp', categoryHandler.getAllCategoriesShortPolling);
+
+// LONG POLLING
+router.get('/lp', categoryHandler.getAllCategoriesLongPolling);
+
 router.get('/:id', categoryHandler.getCategoryById);
-router.post('/', validate(schema), categoryHandler.postCategory);
+
+// WEB SOCKET
+// router.post('/', validate(schema), categoryHandler.postCategory);
+
+// SSE
+router.post('/', validate(schema), categoryHandler.postCategorySSE);
 router.patch('/:id', validate(schema), categoryHandler.patchCategory);
 router.delete('/:id', categoryHandler.deleteCategory);
 
